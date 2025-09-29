@@ -9,15 +9,17 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Delete;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\State\UserClientProcessor;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[ApiResource(
     operations: [
-        new GetCollection(),   // GET /api/users
-        new Get(),             // GET /api/users/{id}
-        new Post(),            // POST /api/users
-        new Delete(),          // DELETE /api/users/{id}
+        new GetCollection(security: "is_granted('IS_AUTHENTICATED_FULLY')"),   // GET /api/users
+        new Get(security: "object.getClient() == user"),             // GET /api/users/{id}
+        new Post(security: "is_granted('IS_AUTHENTICATED_FULLY')", processor: UserClientProcessor::class),            // POST /api/users
+        new Delete(security: "object.getClient() == user"),          // DELETE /api/users/{id}
     ],
     normalizationContext: ['groups' => ['user:read']],
     denormalizationContext: ['groups' => ['user:write']]
@@ -27,15 +29,19 @@ class User
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['user:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255, unique: true)]
+    #[Groups(['user:read','user:write'])]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['user:read','user:write'])]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['user:read','user:write'])]
     private ?string $lastname = null;
 
     #[ORM\ManyToOne(inversedBy: 'users')]

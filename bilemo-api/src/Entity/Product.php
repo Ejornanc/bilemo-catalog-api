@@ -13,11 +13,16 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 #[ApiResource(
     operations: [
-        new GetCollection(), // GET /api/products
-        new Get()            // GET /api/products/{id}
+        new GetCollection(security: "is_granted('IS_AUTHENTICATED_FULLY')"), // GET /api/products
+        new Get(security: "is_granted('IS_AUTHENTICATED_FULLY')")            // GET /api/products/{id}
     ],
     paginationEnabled: false,
-    normalizationContext: ['groups' => ['product:read']]
+    normalizationContext: ['groups' => ['product:read']],
+    cacheHeaders: [
+        'max_age' => 60,
+        'shared_max_age' => 120,
+        'public' => true
+    ]
 )]
 class Product
 {

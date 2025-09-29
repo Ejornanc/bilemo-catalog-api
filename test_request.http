@@ -1,0 +1,41 @@
+### 1) Login to obtain a JWT
+POST http://localhost:8000/api/login
+Content-Type: application/json
+
+{
+  "email": "partner@example.com",
+  "password": "password123"
+}
+
+### Save the token from the response as {{token}} in your HTTP client environment
+
+### 2) List products (requires Bearer token)
+GET http://localhost:8000/api/products
+Authorization: Bearer {{token}}
+
+### 3) Get a product by id
+GET http://localhost:8000/api/products/1
+Authorization: Bearer {{token}}
+
+### 4) List your users (scoped to authenticated Client)
+GET http://localhost:8000/api/users
+Authorization: Bearer {{token}}
+
+### 5) Get a user by id (must belong to authenticated Client)
+GET http://localhost:8000/api/users/1
+Authorization: Bearer {{token}}
+
+### 6) Create a new user for the authenticated Client (client is set automatically)
+POST http://localhost:8000/api/users
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "email": "new.user@example.com",
+  "firstname": "New",
+  "lastname": "User"
+}
+
+### 7) Delete a user (must belong to authenticated Client)
+DELETE http://localhost:8000/api/users/1
+Authorization: Bearer {{token}}
