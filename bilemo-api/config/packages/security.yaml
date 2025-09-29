@@ -41,7 +41,7 @@ security:
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
 
         # Tout le reste de /api nécessite un token
-        - { path: ^/api, roles: PUBLIC_ACCESS }
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:
     security:

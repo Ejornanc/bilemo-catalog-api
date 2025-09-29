@@ -1,0 +1,18 @@
+services:
+  mysql:
+    container_name: Bilemo-Mysql
+    image: mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - ../MYSQL-Bilemo/DATA:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 123user
+  phpmyadmin:
+    container_name: Bilemo-Php-Myadmin
+    image: phpmyadmin
+    ports:
+      - "8088:80"
+    environment:
+      - PMA_HOSTS=mysql
+
